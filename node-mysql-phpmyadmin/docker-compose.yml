@@ -1,0 +1,28 @@
+version: "3.7"
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    volumes:
+      - ./.docker/mysql:/var/lib/mysql/
+    environment:
+      MYSQL_DATABASE: "mydb"
+      MYSQL_ROOT_PASSWORD: "root"
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    links:
+      - mysql
+    ports:
+      - 33080:80
+    environment:
+      - PMA_ARBITRARY=1
+  node:
+    build:
+      context: .
+    container_name: node
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    links:
+      - mysql
